@@ -117,30 +117,6 @@ class TickTickMCPServer {
             }
           },
           {
-            name: 'ticktick_create_project',
-            description: 'Create a new project in TickTick',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                name: {
-                  type: 'string',
-                  description: 'Name of the project'
-                },
-                color: {
-                  type: 'string',
-                  description: 'Project color (hex code)',
-                  default: '#3498db'
-                },
-                is_shared: {
-                  type: 'boolean',
-                  description: 'Whether the project is shared',
-                  default: false
-                }
-              },
-              required: ['name']
-            }
-          },
-          {
             name: 'ticktick_get_task_details',
             description: 'Get specific task details using project ID and task ID',
             inputSchema: {
@@ -156,104 +132,6 @@ class TickTickMCPServer {
                 }
               },
               required: ['project_id', 'task_id']
-            }
-          },
-          {
-            name: 'ticktick_create_task',
-            description: 'Create a new task in TickTick',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                title: {
-                  type: 'string',
-                  description: 'Task title'
-                },
-                content: {
-                  type: 'string',
-                  description: 'Task description/content'
-                },
-                project_id: {
-                  type: 'string',
-                  description: 'Project ID to add task to'
-                },
-                priority: {
-                  type: 'number',
-                  description: 'Task priority (0=None, 1=Low, 3=Medium, 5=High)',
-                  default: 0
-                },
-                due_date: {
-                  type: 'string',
-                  description: 'Due date in ISO format (YYYY-MM-DDTHH:mm:ss)'
-                },
-                tags: {
-                  type: 'array',
-                  items: { type: 'string' },
-                  description: 'Tags for the task'
-                }
-              },
-              required: ['title']
-            }
-          },
-          {
-            name: 'ticktick_update_task',
-            description: 'Update an existing task',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                task_id: {
-                  type: 'string',
-                  description: 'ID of the task to update'
-                },
-                title: {
-                  type: 'string',
-                  description: 'New task title'
-                },
-                content: {
-                  type: 'string',
-                  description: 'New task description'
-                },
-                priority: {
-                  type: 'number',
-                  description: 'New priority level'
-                },
-                due_date: {
-                  type: 'string',
-                  description: 'New due date'
-                },
-                completed: {
-                  type: 'boolean',
-                  description: 'Mark as completed/incomplete'
-                }
-              },
-              required: ['task_id']
-            }
-          },
-          {
-            name: 'ticktick_delete_task',
-            description: 'Delete a task from TickTick',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                task_id: {
-                  type: 'string',
-                  description: 'ID of the task to delete'
-                }
-              },
-              required: ['task_id']
-            }
-          },
-          {
-            name: 'ticktick_complete_task',
-            description: 'Mark a task as completed',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                task_id: {
-                  type: 'string',
-                  description: 'ID of the task to complete'
-                }
-              },
-              required: ['task_id']
             }
           },
           {
@@ -328,25 +206,6 @@ class TickTickMCPServer {
             }
           },
           {
-            name: 'ticktick_create_tag',
-            description: 'Create a new tag in TickTick',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                name: {
-                  type: 'string',
-                  description: 'Name of the tag'
-                },
-                color: {
-                  type: 'string',
-                  description: 'Color of the tag (hex code)',
-                  default: '#3498db'
-                }
-              },
-              required: ['name']
-            }
-          },
-          {
             name: 'ticktick_search_tasks',
             description: 'Advanced search for tasks with text query',
             inputSchema: {
@@ -413,24 +272,6 @@ class TickTickMCPServer {
             }
           },
           {
-            name: 'ticktick_add_tag_to_task',
-            description: 'Add a tag to a specific task',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                task_id: {
-                  type: 'string',
-                  description: 'ID of the task'
-                },
-                tag_name: {
-                  type: 'string',
-                  description: 'Name of the tag to add'
-                }
-              },
-              required: ['task_id', 'tag_name']
-            }
-          },
-          {
             name: 'ticktick_get_user_profile',
             description: 'Get user profile information',
             inputSchema: {
@@ -450,110 +291,6 @@ class TickTickMCPServer {
                   default: false
                 }
               }
-            }
-          },
-          {
-            name: 'ticktick_create_habit',
-            description: 'Create a new habit in TickTick',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                name: {
-                  type: 'string',
-                  description: 'Name of the habit'
-                },
-                frequency: {
-                  type: 'string',
-                  description: 'Frequency: daily, weekly, or custom',
-                  default: 'daily'
-                },
-                goal: {
-                  type: 'number',
-                  description: 'Target count per frequency period',
-                  default: 1
-                },
-                reminder_time: {
-                  type: 'string',
-                  description: 'Reminder time in HH:MM format'
-                },
-                color: {
-                  type: 'string',
-                  description: 'Habit color (hex code)',
-                  default: '#3498db'
-                }
-              },
-              required: ['name']
-            }
-          },
-          {
-            name: 'ticktick_update_habit',
-            description: 'Update an existing habit',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                habit_id: {
-                  type: 'string',
-                  description: 'ID of the habit to update'
-                },
-                name: {
-                  type: 'string',
-                  description: 'Updated name'
-                },
-                frequency: {
-                  type: 'string',
-                  description: 'Updated frequency'
-                },
-                goal: {
-                  type: 'number',
-                  description: 'Updated goal count'
-                },
-                reminder_time: {
-                  type: 'string',
-                  description: 'Updated reminder time'
-                },
-                color: {
-                  type: 'string',
-                  description: 'Updated color'
-                }
-              },
-              required: ['habit_id']
-            }
-          },
-          {
-            name: 'ticktick_delete_habit',
-            description: 'Delete a habit permanently',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                habit_id: {
-                  type: 'string',
-                  description: 'ID of the habit to delete'
-                }
-              },
-              required: ['habit_id']
-            }
-          },
-          {
-            name: 'ticktick_checkin_habit',
-            description: 'Check in a habit for today',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                habit_id: {
-                  type: 'string',
-                  description: 'ID of the habit'
-                },
-                date: {
-                  type: 'string',
-                  description: 'Date for check-in (YYYY-MM-DD), defaults to today'
-                },
-                count: {
-                  type: 'number',
-                  description: 'Number of times completed',
-                  default: 1
-                }
-              },
-              required: ['habit_id']
             }
           },
           {
@@ -590,38 +327,6 @@ class TickTickMCPServer {
             }
           },
           {
-            name: 'ticktick_pause_habit',
-            description: 'Temporarily pause a habit',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                habit_id: {
-                  type: 'string',
-                  description: 'ID of the habit to pause'
-                },
-                resume_date: {
-                  type: 'string',
-                  description: 'Date to resume (YYYY-MM-DD), optional'
-                }
-              },
-              required: ['habit_id']
-            }
-          },
-          {
-            name: 'ticktick_resume_habit',
-            description: 'Resume a paused habit',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                habit_id: {
-                  type: 'string',
-                  description: 'ID of the habit to resume'
-                }
-              },
-              required: ['habit_id']
-            }
-          },
-          {
             name: 'ticktick_get_habit_streaks',
             description: 'Get current and longest streaks for a habit',
             inputSchema: {
@@ -633,25 +338,6 @@ class TickTickMCPServer {
                 }
               },
               required: ['habit_id']
-            }
-          },
-          {
-            name: 'ticktick_bulk_checkin_habits',
-            description: 'Check in multiple habits at once',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                habit_ids: {
-                  type: 'array',
-                  items: { type: 'string' },
-                  description: 'Array of habit IDs to check in'
-                },
-                date: {
-                  type: 'string',
-                  description: 'Date for check-ins (YYYY-MM-DD), defaults to today'
-                }
-              },
-              required: ['habit_ids']
             }
           },
           {
@@ -675,33 +361,6 @@ class TickTickMCPServer {
                 }
               },
               required: ['habit_id']
-            }
-          },
-          {
-            name: 'ticktick_set_habit_goal',
-            description: 'Set or update habit goal',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                habit_id: {
-                  type: 'string',
-                  description: 'ID of the habit'
-                },
-                goal_type: {
-                  type: 'string',
-                  description: 'Type of goal: daily, weekly, monthly',
-                  default: 'daily'
-                },
-                target_count: {
-                  type: 'number',
-                  description: 'Target completion count'
-                },
-                target_streak: {
-                  type: 'number',
-                  description: 'Target streak length'
-                }
-              },
-              required: ['habit_id', 'target_count']
             }
           },
           {
@@ -744,60 +403,6 @@ class TickTickMCPServer {
             }
           },
           {
-            name: 'ticktick_update_tag',
-            description: 'Update an existing tag',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                tag_id: {
-                  type: 'string',
-                  description: 'ID of the tag to update'
-                },
-                name: {
-                  type: 'string',
-                  description: 'Updated tag name'
-                },
-                color: {
-                  type: 'string',
-                  description: 'Updated tag color (hex code)'
-                }
-              },
-              required: ['tag_id']
-            }
-          },
-          {
-            name: 'ticktick_delete_tag',
-            description: 'Delete a tag permanently',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                tag_id: {
-                  type: 'string',
-                  description: 'ID of the tag to delete'
-                }
-              },
-              required: ['tag_id']
-            }
-          },
-          {
-            name: 'ticktick_remove_tag_from_task',
-            description: 'Remove a tag from a specific task',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                task_id: {
-                  type: 'string',
-                  description: 'ID of the task'
-                },
-                tag_name: {
-                  type: 'string',
-                  description: 'Name of the tag to remove'
-                }
-              },
-              required: ['task_id', 'tag_name']
-            }
-          },
-          {
             name: 'ticktick_get_tasks_by_tag',
             description: 'Get all tasks with a specific tag',
             inputSchema: {
@@ -831,119 +436,6 @@ class TickTickMCPServer {
             }
           },
           {
-            name: 'ticktick_merge_tags',
-            description: 'Merge two tags into one',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                source_tag_id: {
-                  type: 'string',
-                  description: 'ID of the tag to merge from'
-                },
-                target_tag_id: {
-                  type: 'string',
-                  description: 'ID of the tag to merge into'
-                }
-              },
-              required: ['source_tag_id', 'target_tag_id']
-            }
-          },
-          {
-            name: 'ticktick_bulk_tag_operations',
-            description: 'Perform bulk operations on tags',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                operation: {
-                  type: 'string',
-                  description: 'Operation: add, remove, replace',
-                  enum: ['add', 'remove', 'replace']
-                },
-                task_ids: {
-                  type: 'array',
-                  items: { type: 'string' },
-                  description: 'Array of task IDs to operate on'
-                },
-                tag_names: {
-                  type: 'array',
-                  items: { type: 'string' },
-                  description: 'Array of tag names for the operation'
-                },
-                replace_with: {
-                  type: 'array',
-                  items: { type: 'string' },
-                  description: 'New tags for replace operation'
-                }
-              },
-              required: ['operation', 'task_ids', 'tag_names']
-            }
-          },
-          {
-            name: 'ticktick_start_focus_session',
-            description: 'Start a focus/Pomodoro session',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                task_id: {
-                  type: 'string',
-                  description: 'ID of the task to focus on (optional)'
-                },
-                duration: {
-                  type: 'number',
-                  description: 'Focus duration in minutes',
-                  default: 25
-                },
-                session_type: {
-                  type: 'string',
-                  description: 'Type of session: focus, short_break, long_break',
-                  default: 'focus'
-                }
-              }
-            }
-          },
-          {
-            name: 'ticktick_stop_focus_session',
-            description: 'Stop the current focus session',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                session_id: {
-                  type: 'string',
-                  description: 'ID of the session to stop'
-                }
-              },
-              required: ['session_id']
-            }
-          },
-          {
-            name: 'ticktick_pause_focus_session',
-            description: 'Pause the current focus session',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                session_id: {
-                  type: 'string',
-                  description: 'ID of the session to pause'
-                }
-              },
-              required: ['session_id']
-            }
-          },
-          {
-            name: 'ticktick_resume_focus_session',
-            description: 'Resume a paused focus session',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                session_id: {
-                  type: 'string',
-                  description: 'ID of the session to resume'
-                }
-              },
-              required: ['session_id']
-            }
-          },
-          {
             name: 'ticktick_get_focus_stats',
             description: 'Get focus time statistics and analytics',
             inputSchema: {
@@ -955,29 +447,6 @@ class TickTickMCPServer {
                   default: 'today'
                 }
               }
-            }
-          },
-          {
-            name: 'ticktick_set_task_estimate',
-            description: 'Set estimated time for a task',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                task_id: {
-                  type: 'string',
-                  description: 'ID of the task'
-                },
-                estimated_minutes: {
-                  type: 'number',
-                  description: 'Estimated time in minutes'
-                },
-                estimate_type: {
-                  type: 'string',
-                  description: 'Type of estimate: pomodoros, minutes, hours',
-                  default: 'minutes'
-                }
-              },
-              required: ['task_id', 'estimated_minutes']
             }
           },
           {
@@ -1012,29 +481,6 @@ class TickTickMCPServer {
             }
           },
           {
-            name: 'ticktick_set_focus_goals',
-            description: 'Set daily or weekly focus time goals',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                goal_type: {
-                  type: 'string',
-                  description: 'Type of goal: daily, weekly',
-                  default: 'daily'
-                },
-                target_minutes: {
-                  type: 'number',
-                  description: 'Target focus time in minutes'
-                },
-                target_sessions: {
-                  type: 'number',
-                  description: 'Target number of focus sessions'
-                }
-              },
-              required: ['target_minutes']
-            }
-          },
-          {
             name: 'ticktick_get_productivity_insights',
             description: 'Get AI-powered productivity insights',
             inputSchema: {
@@ -1057,94 +503,6 @@ class TickTickMCPServer {
             }
           },
           {
-            name: 'ticktick_create_project_folder',
-            description: 'Create a new project folder for organization',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                name: {
-                  type: 'string',
-                  description: 'Name of the folder'
-                },
-                color: {
-                  type: 'string',
-                  description: 'Folder color (hex code)',
-                  default: '#3498db'
-                }
-              },
-              required: ['name']
-            }
-          },
-          {
-            name: 'ticktick_move_project_to_folder',
-            description: 'Move a project to a specific folder',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                project_id: {
-                  type: 'string',
-                  description: 'ID of the project to move'
-                },
-                folder_id: {
-                  type: 'string',
-                  description: 'ID of the destination folder'
-                }
-              },
-              required: ['project_id', 'folder_id']
-            }
-          },
-          {
-            name: 'ticktick_archive_project',
-            description: 'Archive a completed project',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                project_id: {
-                  type: 'string',
-                  description: 'ID of the project to archive'
-                }
-              },
-              required: ['project_id']
-            }
-          },
-          {
-            name: 'ticktick_unarchive_project',
-            description: 'Restore an archived project',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                project_id: {
-                  type: 'string',
-                  description: 'ID of the project to unarchive'
-                }
-              },
-              required: ['project_id']
-            }
-          },
-          {
-            name: 'ticktick_duplicate_project',
-            description: 'Create a copy of an existing project',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                project_id: {
-                  type: 'string',
-                  description: 'ID of the project to duplicate'
-                },
-                new_name: {
-                  type: 'string',
-                  description: 'Name for the duplicated project'
-                },
-                include_tasks: {
-                  type: 'boolean',
-                  description: 'Include tasks in the duplicate',
-                  default: true
-                }
-              },
-              required: ['project_id', 'new_name']
-            }
-          },
-          {
             name: 'ticktick_get_project_stats',
             description: 'Get project analytics and statistics',
             inputSchema: {
@@ -1156,46 +514,6 @@ class TickTickMCPServer {
                 }
               },
               required: ['project_id']
-            }
-          },
-          {
-            name: 'ticktick_set_project_color',
-            description: 'Customize project appearance',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                project_id: {
-                  type: 'string',
-                  description: 'ID of the project'
-                },
-                color: {
-                  type: 'string',
-                  description: 'New color (hex code)'
-                }
-              },
-              required: ['project_id', 'color']
-            }
-          },
-          {
-            name: 'ticktick_reorder_projects',
-            description: 'Change project display order',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                project_orders: {
-                  type: 'array',
-                  items: {
-                    type: 'object',
-                    properties: {
-                      project_id: { type: 'string' },
-                      sort_order: { type: 'number' }
-                    },
-                    required: ['project_id', 'sort_order']
-                  },
-                  description: 'Array of project IDs with their new sort orders'
-                }
-              },
-              required: ['project_orders']
             }
           },
           {
@@ -1211,83 +529,7 @@ class TickTickMCPServer {
               }
             }
           },
-          {
-            name: 'ticktick_create_project_from_template',
-            description: 'Create project from a template',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                template_id: {
-                  type: 'string',
-                  description: 'ID of the template to use'
-                },
-                project_name: {
-                  type: 'string',
-                  description: 'Name for the new project'
-                },
-                customize_tasks: {
-                  type: 'boolean',
-                  description: 'Allow task customization during creation',
-                  default: false
-                }
-              },
-              required: ['template_id', 'project_name']
-            }
-          },
-          {
-            name: 'ticktick_export_project',
-            description: 'Export project data',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                project_id: {
-                  type: 'string',
-                  description: 'ID of the project to export'
-                },
-                format: {
-                  type: 'string',
-                  description: 'Export format: json, csv, md',
-                  default: 'json'
-                },
-                include_completed: {
-                  type: 'boolean',
-                  description: 'Include completed tasks',
-                  default: true
-                }
-              },
-              required: ['project_id']
-            }
-          },
           // Collaboration & Sharing (12 operations)
-          {
-            name: 'ticktick_share_project',
-            description: 'Share project with others',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                project_id: {
-                  type: 'string',
-                  description: 'ID of the project to share'
-                },
-                emails: {
-                  type: 'array',
-                  items: { type: 'string' },
-                  description: 'Email addresses to share with'
-                },
-                permission_level: {
-                  type: 'string',
-                  enum: ['view', 'edit', 'admin'],
-                  description: 'Permission level for shared users',
-                  default: 'edit'
-                },
-                message: {
-                  type: 'string',
-                  description: 'Optional invitation message'
-                }
-              },
-              required: ['project_id', 'emails']
-            }
-          },
           {
             name: 'ticktick_get_shared_projects',
             description: 'List shared projects',
@@ -1308,84 +550,6 @@ class TickTickMCPServer {
             }
           },
           {
-            name: 'ticktick_invite_collaborator',
-            description: 'Invite user to project',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                project_id: {
-                  type: 'string',
-                  description: 'ID of the project'
-                },
-                email: {
-                  type: 'string',
-                  description: 'Email address of user to invite'
-                },
-                role: {
-                  type: 'string',
-                  enum: ['member', 'editor', 'admin'],
-                  description: 'Role for the invited user',
-                  default: 'member'
-                },
-                personal_message: {
-                  type: 'string',
-                  description: 'Personal invitation message'
-                }
-              },
-              required: ['project_id', 'email']
-            }
-          },
-          {
-            name: 'ticktick_remove_collaborator',
-            description: 'Remove project access',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                project_id: {
-                  type: 'string',
-                  description: 'ID of the project'
-                },
-                user_id: {
-                  type: 'string',
-                  description: 'ID of user to remove'
-                }
-              },
-              required: ['project_id', 'user_id']
-            }
-          },
-          {
-            name: 'ticktick_assign_task',
-            description: 'Assign task to team member',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                task_id: {
-                  type: 'string',
-                  description: 'ID of the task to assign'
-                },
-                assignee_id: {
-                  type: 'string',
-                  description: 'ID of user to assign task to'
-                },
-                due_date: {
-                  type: 'string',
-                  description: 'Due date for the assignment'
-                },
-                priority: {
-                  type: 'string',
-                  enum: ['low', 'medium', 'high'],
-                  description: 'Priority level for the assignment'
-                },
-                notification: {
-                  type: 'boolean',
-                  description: 'Send notification to assignee',
-                  default: true
-                }
-              },
-              required: ['task_id', 'assignee_id']
-            }
-          },
-          {
             name: 'ticktick_get_task_assignees',
             description: 'List task assignees',
             inputSchema: {
@@ -1397,34 +561,6 @@ class TickTickMCPServer {
                 }
               },
               required: ['task_id']
-            }
-          },
-          {
-            name: 'ticktick_add_task_comment',
-            description: 'Add comment for team communication',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                task_id: {
-                  type: 'string',
-                  description: 'ID of the task'
-                },
-                comment: {
-                  type: 'string',
-                  description: 'Comment text'
-                },
-                mention_users: {
-                  type: 'array',
-                  items: { type: 'string' },
-                  description: 'User IDs to mention in comment'
-                },
-                is_private: {
-                  type: 'boolean',
-                  description: 'Make comment private',
-                  default: false
-                }
-              },
-              required: ['task_id', 'comment']
             }
           },
           {
@@ -1455,35 +591,6 @@ class TickTickMCPServer {
             }
           },
           {
-            name: 'ticktick_set_project_permissions',
-            description: 'Configure access levels',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                project_id: {
-                  type: 'string',
-                  description: 'ID of the project'
-                },
-                permissions: {
-                  type: 'object',
-                  properties: {
-                    can_invite: { type: 'boolean' },
-                    can_edit_tasks: { type: 'boolean' },
-                    can_delete_tasks: { type: 'boolean' },
-                    can_view_reports: { type: 'boolean' }
-                  },
-                  description: 'Permission settings'
-                },
-                apply_to_existing: {
-                  type: 'boolean',
-                  description: 'Apply to existing collaborators',
-                  default: false
-                }
-              },
-              required: ['project_id', 'permissions']
-            }
-          },
-          {
             name: 'ticktick_get_collaboration_stats',
             description: 'Team productivity metrics',
             inputSchema: {
@@ -1498,68 +605,6 @@ class TickTickMCPServer {
                   enum: ['week', 'month', 'quarter', 'year'],
                   description: 'Time period for stats',
                   default: 'month'
-                }
-              },
-              required: ['project_id']
-            }
-          },
-          {
-            name: 'ticktick_bulk_assign_tasks',
-            description: 'Mass task assignment',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                assignments: {
-                  type: 'array',
-                  items: {
-                    type: 'object',
-                    properties: {
-                      task_id: { type: 'string' },
-                      assignee_id: { type: 'string' },
-                      due_date: { type: 'string' }
-                    },
-                    required: ['task_id', 'assignee_id']
-                  },
-                  description: 'Array of task assignments'
-                },
-                notify_assignees: {
-                  type: 'boolean',
-                  description: 'Send notifications to all assignees',
-                  default: true
-                }
-              },
-              required: ['assignments']
-            }
-          },
-          {
-            name: 'ticktick_export_team_report',
-            description: 'Team performance reports',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                project_id: {
-                  type: 'string',
-                  description: 'ID of the project'
-                },
-                report_type: {
-                  type: 'string',
-                  enum: ['productivity', 'task_completion', 'time_tracking', 'team_activity'],
-                  description: 'Type of report to generate',
-                  default: 'productivity'
-                },
-                date_range: {
-                  type: 'object',
-                  properties: {
-                    start_date: { type: 'string' },
-                    end_date: { type: 'string' }
-                  },
-                  description: 'Date range for the report'
-                },
-                format: {
-                  type: 'string',
-                  enum: ['pdf', 'csv', 'json'],
-                  description: 'Report format',
-                  default: 'pdf'
                 }
               },
               required: ['project_id']
@@ -1585,91 +630,6 @@ class TickTickMCPServer {
                   description: 'Specific calendar ID to filter'
                 }
               }
-            }
-          },
-          {
-            name: 'ticktick_create_calendar_event',
-            description: 'Create calendar event',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                title: {
-                  type: 'string',
-                  description: 'Event title'
-                },
-                start_time: {
-                  type: 'string',
-                  description: 'Event start time (ISO format)'
-                },
-                end_time: {
-                  type: 'string',
-                  description: 'Event end time (ISO format)'
-                },
-                description: {
-                  type: 'string',
-                  description: 'Event description'
-                },
-                location: {
-                  type: 'string',
-                  description: 'Event location'
-                },
-                reminder_minutes: {
-                  type: 'number',
-                  description: 'Reminder time in minutes before event',
-                  default: 15
-                }
-              },
-              required: ['title', 'start_time', 'end_time']
-            }
-          },
-          {
-            name: 'ticktick_sync_with_google_calendar',
-            description: 'Google Calendar sync',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                google_calendar_id: {
-                  type: 'string',
-                  description: 'Google Calendar ID to sync with'
-                },
-                sync_direction: {
-                  type: 'string',
-                  enum: ['import', 'export', 'bidirectional'],
-                  description: 'Sync direction',
-                  default: 'bidirectional'
-                },
-                date_range_days: {
-                  type: 'number',
-                  description: 'Number of days to sync (past and future)',
-                  default: 30
-                }
-              },
-              required: ['google_calendar_id']
-            }
-          },
-          {
-            name: 'ticktick_sync_with_outlook',
-            description: 'Outlook integration',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                outlook_calendar_id: {
-                  type: 'string',
-                  description: 'Outlook Calendar ID to sync with'
-                },
-                sync_direction: {
-                  type: 'string',
-                  enum: ['import', 'export', 'bidirectional'],
-                  description: 'Sync direction',
-                  default: 'bidirectional'
-                },
-                include_meetings: {
-                  type: 'boolean',
-                  description: 'Include meeting invitations',
-                  default: true
-                }
-              },
-              required: ['outlook_calendar_id']
             }
           },
           {
@@ -1701,34 +661,6 @@ class TickTickMCPServer {
             }
           },
           {
-            name: 'ticktick_convert_task_to_event',
-            description: 'Transform task into calendar event',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                task_id: {
-                  type: 'string',
-                  description: 'ID of task to convert'
-                },
-                event_duration_minutes: {
-                  type: 'number',
-                  description: 'Duration of the event in minutes',
-                  default: 60
-                },
-                start_time: {
-                  type: 'string',
-                  description: 'Preferred start time (ISO format)'
-                },
-                create_reminder: {
-                  type: 'boolean',
-                  description: 'Create reminder for the event',
-                  default: true
-                }
-              },
-              required: ['task_id']
-            }
-          },
-          {
             name: 'ticktick_get_schedule_conflicts',
             description: 'Detect scheduling conflicts',
             inputSchema: {
@@ -1755,34 +687,6 @@ class TickTickMCPServer {
               }
             }
           },
-          {
-            name: 'ticktick_bulk_calendar_import',
-            description: 'Import external calendar data',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                calendar_data: {
-                  type: 'string',
-                  description: 'Calendar data in iCal format'
-                },
-                import_source: {
-                  type: 'string',
-                  description: 'Source of the calendar data'
-                },
-                merge_duplicates: {
-                  type: 'boolean',
-                  description: 'Merge duplicate events',
-                  default: true
-                },
-                create_new_calendar: {
-                  type: 'boolean',
-                  description: 'Create new calendar for imported events',
-                  default: false
-                }
-              },
-              required: ['calendar_data']
-            }
-          },
           // Notes & Attachments (8 operations)
           {
             name: 'ticktick_get_task_notes',
@@ -1807,105 +711,6 @@ class TickTickMCPServer {
                 }
               },
               required: ['task_id']
-            }
-          },
-          {
-            name: 'ticktick_add_task_note',
-            description: 'Add note to task',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                task_id: {
-                  type: 'string',
-                  description: 'ID of the task'
-                },
-                note_content: {
-                  type: 'string',
-                  description: 'Note content'
-                },
-                note_type: {
-                  type: 'string',
-                  enum: ['comment', 'progress', 'reminder'],
-                  description: 'Type of note',
-                  default: 'comment'
-                },
-                is_private: {
-                  type: 'boolean',
-                  description: 'Make note private',
-                  default: false
-                }
-              },
-              required: ['task_id', 'note_content']
-            }
-          },
-          {
-            name: 'ticktick_update_task_note',
-            description: 'Edit task note',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                task_id: {
-                  type: 'string',
-                  description: 'ID of the task'
-                },
-                note_id: {
-                  type: 'string',
-                  description: 'ID of the note to update'
-                },
-                new_content: {
-                  type: 'string',
-                  description: 'Updated note content'
-                }
-              },
-              required: ['task_id', 'note_id', 'new_content']
-            }
-          },
-          {
-            name: 'ticktick_delete_task_note',
-            description: 'Remove task note',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                task_id: {
-                  type: 'string',
-                  description: 'ID of the task'
-                },
-                note_id: {
-                  type: 'string',
-                  description: 'ID of the note to delete'
-                }
-              },
-              required: ['task_id', 'note_id']
-            }
-          },
-          {
-            name: 'ticktick_upload_task_attachment',
-            description: 'Attach files to tasks',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                task_id: {
-                  type: 'string',
-                  description: 'ID of the task'
-                },
-                file_data: {
-                  type: 'string',
-                  description: 'Base64 encoded file data'
-                },
-                file_name: {
-                  type: 'string',
-                  description: 'Name of the file'
-                },
-                file_type: {
-                  type: 'string',
-                  description: 'MIME type of the file'
-                },
-                description: {
-                  type: 'string',
-                  description: 'Description of the attachment'
-                }
-              },
-              required: ['task_id', 'file_data', 'file_name']
             }
           },
           {
@@ -1952,24 +757,6 @@ class TickTickMCPServer {
               required: ['task_id', 'attachment_id']
             }
           },
-          {
-            name: 'ticktick_delete_task_attachment',
-            description: 'Remove attachments',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                task_id: {
-                  type: 'string',
-                  description: 'ID of the task'
-                },
-                attachment_id: {
-                  type: 'string',
-                  description: 'ID of the attachment to delete'
-                }
-              },
-              required: ['task_id', 'attachment_id']
-            }
-          },
           // Templates & Automation (9 operations)
           {
             name: 'ticktick_get_task_templates',
@@ -1996,166 +783,6 @@ class TickTickMCPServer {
             }
           },
           {
-            name: 'ticktick_create_task_template',
-            description: 'Create reusable template',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                template_name: {
-                  type: 'string',
-                  description: 'Name of the template'
-                },
-                template_description: {
-                  type: 'string',
-                  description: 'Description of the template'
-                },
-                task_data: {
-                  type: 'object',
-                  description: 'Task structure to save as template',
-                  properties: {
-                    title: { type: 'string' },
-                    description: { type: 'string' },
-                    priority: { type: 'string' },
-                    tags: { type: 'array', items: { type: 'string' } },
-                    estimated_duration: { type: 'number' }
-                  },
-                  required: ['title']
-                },
-                category: {
-                  type: 'string',
-                  description: 'Template category',
-                  default: 'general'
-                },
-                is_shared: {
-                  type: 'boolean',
-                  description: 'Share template with team',
-                  default: false
-                }
-              },
-              required: ['template_name', 'task_data']
-            }
-          },
-          {
-            name: 'ticktick_update_task_template',
-            description: 'Modify template',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                template_id: {
-                  type: 'string',
-                  description: 'ID of template to update'
-                },
-                template_name: {
-                  type: 'string',
-                  description: 'Updated template name'
-                },
-                template_description: {
-                  type: 'string',
-                  description: 'Updated description'
-                },
-                task_data: {
-                  type: 'object',
-                  description: 'Updated task structure'
-                },
-                category: {
-                  type: 'string',
-                  description: 'Updated category'
-                }
-              },
-              required: ['template_id']
-            }
-          },
-          {
-            name: 'ticktick_delete_task_template',
-            description: 'Remove template',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                template_id: {
-                  type: 'string',
-                  description: 'ID of template to delete'
-                }
-              },
-              required: ['template_id']
-            }
-          },
-          {
-            name: 'ticktick_create_task_from_template',
-            description: 'Instantiate template',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                template_id: {
-                  type: 'string',
-                  description: 'ID of template to use'
-                },
-                project_id: {
-                  type: 'string',
-                  description: 'Project to create task in'
-                },
-                customizations: {
-                  type: 'object',
-                  description: 'Custom values to override template defaults',
-                  properties: {
-                    title: { type: 'string' },
-                    due_date: { type: 'string' },
-                    priority: { type: 'string' },
-                    assignee_id: { type: 'string' }
-                  }
-                },
-                create_multiple: {
-                  type: 'number',
-                  description: 'Number of tasks to create from template',
-                  default: 1
-                }
-              },
-              required: ['template_id']
-            }
-          },
-          {
-            name: 'ticktick_set_recurring_task',
-            description: 'Configure task recurrence',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                task_id: {
-                  type: 'string',
-                  description: 'ID of task to make recurring'
-                },
-                recurrence_pattern: {
-                  type: 'object',
-                  properties: {
-                    frequency: {
-                      type: 'string',
-                      enum: ['daily', 'weekly', 'monthly', 'yearly'],
-                      description: 'How often to repeat'
-                    },
-                    interval: {
-                      type: 'number',
-                      description: 'Repeat every N frequency units',
-                      default: 1
-                    },
-                    days_of_week: {
-                      type: 'array',
-                      items: { type: 'number', minimum: 0, maximum: 6 },
-                      description: 'Days of week (0=Sunday, 6=Saturday)'
-                    },
-                    end_condition: {
-                      type: 'object',
-                      properties: {
-                        type: { type: 'string', enum: ['never', 'after_count', 'on_date'] },
-                        count: { type: 'number' },
-                        end_date: { type: 'string' }
-                      }
-                    }
-                  },
-                  required: ['frequency']
-                }
-              },
-              required: ['task_id', 'recurrence_pattern']
-            }
-          },
-          {
             name: 'ticktick_get_recurring_tasks',
             description: 'List recurring tasks',
             inputSchema: {
@@ -2178,67 +805,6 @@ class TickTickMCPServer {
                   default: 'active'
                 }
               }
-            }
-          },
-          {
-            name: 'ticktick_pause_recurring_task',
-            description: 'Temporarily stop recurrence',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                task_id: {
-                  type: 'string',
-                  description: 'ID of recurring task to pause'
-                },
-                pause_reason: {
-                  type: 'string',
-                  description: 'Reason for pausing (optional)'
-                },
-                resume_date: {
-                  type: 'string',
-                  description: 'When to automatically resume (YYYY-MM-DD)'
-                }
-              },
-              required: ['task_id']
-            }
-          },
-          {
-            name: 'ticktick_bulk_create_from_template',
-            description: 'Mass task creation',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                template_id: {
-                  type: 'string',
-                  description: 'Template to use for bulk creation'
-                },
-                bulk_data: {
-                  type: 'array',
-                  items: {
-                    type: 'object',
-                    properties: {
-                      title: { type: 'string' },
-                      project_id: { type: 'string' },
-                      due_date: { type: 'string' },
-                      assignee_id: { type: 'string' },
-                      custom_fields: { type: 'object' }
-                    },
-                    required: ['title']
-                  },
-                  description: 'Array of task data for bulk creation'
-                },
-                apply_template_defaults: {
-                  type: 'boolean',
-                  description: 'Use template defaults for missing fields',
-                  default: true
-                },
-                notify_assignees: {
-                  type: 'boolean',
-                  description: 'Send notifications to assignees',
-                  default: true
-                }
-              },
-              required: ['template_id', 'bulk_data']
             }
           },
           {
@@ -2514,63 +1080,6 @@ class TickTickMCPServer {
             }
           },
           {
-            name: 'ticktick_update_user_settings',
-            description: 'Modify user preferences and account settings',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                settings: {
-                  type: 'object',
-                  properties: {
-                    timezone: {
-                      type: 'string',
-                      description: 'User timezone (e.g., "America/New_York")'
-                    },
-                    language: {
-                      type: 'string',
-                      description: 'Interface language code (e.g., "en", "es", "fr")'
-                    },
-                    date_format: {
-                      type: 'string',
-                      enum: ['MM/DD/YYYY', 'DD/MM/YYYY', 'YYYY-MM-DD'],
-                      description: 'Preferred date format'
-                    },
-                    time_format: {
-                      type: 'string',
-                      enum: ['12h', '24h'],
-                      description: 'Time format preference'
-                    },
-                    start_of_week: {
-                      type: 'number',
-                      minimum: 0,
-                      maximum: 6,
-                      description: 'First day of week (0=Sunday, 1=Monday)'
-                    },
-                    theme: {
-                      type: 'string',
-                      enum: ['light', 'dark', 'auto'],
-                      description: 'UI theme preference'
-                    },
-                    default_list: {
-                      type: 'string',
-                      description: 'Default project ID for new tasks'
-                    },
-                    smart_add: {
-                      type: 'boolean',
-                      description: 'Enable smart task parsing'
-                    },
-                    auto_backup: {
-                      type: 'boolean',
-                      description: 'Enable automatic data backup'
-                    }
-                  },
-                  description: 'Settings to update'
-                }
-              },
-              required: ['settings']
-            }
-          },
-          {
             name: 'ticktick_get_notification_settings',
             description: 'Get current notification preferences and settings',
             inputSchema: {
@@ -2591,70 +1100,6 @@ class TickTickMCPServer {
             }
           },
           {
-            name: 'ticktick_update_notification_settings',
-            description: 'Configure notification preferences for various events',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                notifications: {
-                  type: 'object',
-                  properties: {
-                    task_reminders: {
-                      type: 'object',
-                      properties: {
-                        enabled: { type: 'boolean' },
-                        advance_time: { type: 'number', description: 'Minutes before due time' },
-                        sound: { type: 'string' },
-                        vibrate: { type: 'boolean' }
-                      }
-                    },
-                    habit_reminders: {
-                      type: 'object',
-                      properties: {
-                        enabled: { type: 'boolean' },
-                        time: { type: 'string', description: 'Daily reminder time (HH:MM)' },
-                        days: {
-                          type: 'array',
-                          items: { type: 'number', minimum: 0, maximum: 6 },
-                          description: 'Days of week for reminders'
-                        }
-                      }
-                    },
-                    collaboration: {
-                      type: 'object',
-                      properties: {
-                        task_assignments: { type: 'boolean' },
-                        project_invitations: { type: 'boolean' },
-                        comments: { type: 'boolean' },
-                        status_updates: { type: 'boolean' }
-                      }
-                    },
-                    system: {
-                      type: 'object',
-                      properties: {
-                        app_updates: { type: 'boolean' },
-                        tips_and_tricks: { type: 'boolean' },
-                        weekly_reports: { type: 'boolean' },
-                        promotional: { type: 'boolean' }
-                      }
-                    },
-                    delivery_methods: {
-                      type: 'object',
-                      properties: {
-                        push_notifications: { type: 'boolean' },
-                        email_notifications: { type: 'boolean' },
-                        sms_notifications: { type: 'boolean' },
-                        in_app_notifications: { type: 'boolean' }
-                      }
-                    }
-                  },
-                  description: 'Notification settings to update'
-                }
-              },
-              required: ['notifications']
-            }
-          },
-          {
             name: 'ticktick_get_sync_settings',
             description: 'Get device synchronization configuration and status',
             inputSchema: {
@@ -2671,111 +1116,6 @@ class TickTickMCPServer {
                   default: false
                 }
               }
-            }
-          },
-          {
-            name: 'ticktick_update_sync_settings',
-            description: 'Configure synchronization behavior and preferences',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                sync_settings: {
-                  type: 'object',
-                  properties: {
-                    auto_sync: {
-                      type: 'boolean',
-                      description: 'Enable automatic synchronization'
-                    },
-                    sync_frequency: {
-                      type: 'string',
-                      enum: ['real-time', 'every-5min', 'every-15min', 'every-hour', 'manual'],
-                      description: 'How often to sync data'
-                    },
-                    sync_on_wifi_only: {
-                      type: 'boolean',
-                      description: 'Only sync when connected to WiFi'
-                    },
-                    conflict_resolution: {
-                      type: 'string',
-                      enum: ['server-wins', 'client-wins', 'merge', 'prompt'],
-                      description: 'How to handle sync conflicts'
-                    },
-                    data_types: {
-                      type: 'object',
-                      properties: {
-                        tasks: { type: 'boolean' },
-                        projects: { type: 'boolean' },
-                        habits: { type: 'boolean' },
-                        calendar: { type: 'boolean' },
-                        attachments: { type: 'boolean' },
-                        settings: { type: 'boolean' }
-                      },
-                      description: 'Which data types to sync'
-                    },
-                    backup_before_sync: {
-                      type: 'boolean',
-                      description: 'Create backup before major sync operations'
-                    },
-                    compression: {
-                      type: 'boolean',
-                      description: 'Compress data during sync to save bandwidth'
-                    }
-                  },
-                  description: 'Sync settings to update'
-                }
-              },
-              required: ['sync_settings']
-            }
-          },
-          {
-            name: 'ticktick_reset_user_data',
-            description: 'Reset or manage user data with various options',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                reset_type: {
-                  type: 'string',
-                  enum: ['settings-only', 'cache-only', 'partial-data', 'full-reset'],
-                  description: 'Type of reset to perform'
-                },
-                data_categories: {
-                  type: 'array',
-                  items: {
-                    type: 'string',
-                    enum: ['tasks', 'projects', 'habits', 'calendar', 'tags', 'templates', 'analytics', 'settings']
-                  },
-                  description: 'Specific data categories to reset (for partial-data reset)'
-                },
-                backup_before_reset: {
-                  type: 'boolean',
-                  description: 'Create backup before performing reset',
-                  default: true
-                },
-                confirmation_code: {
-                  type: 'string',
-                  description: 'Required confirmation code for destructive operations'
-                },
-                export_data_first: {
-                  type: 'boolean',
-                  description: 'Export data before reset for user download',
-                  default: false
-                }
-              },
-              required: ['reset_type']
-            }
-          },
-          {
-            name: 'ticktick_import_from_csv',
-            description: 'Import tasks from CSV data to bootstrap the task cache',
-            inputSchema: {
-              type: 'object',
-              properties: {
-                csv_data: {
-                  type: 'string',
-                  description: 'CSV data with columns: task_id, project_id, title'
-                }
-              },
-              required: ['csv_data']
             }
           },
           {
@@ -2834,16 +1174,6 @@ class TickTickMCPServer {
         switch (name) {
           case 'ticktick_get_projects':
             return await this.getProjects(args);
-          case 'ticktick_create_project':
-            return await this.createProject(args);
-          case 'ticktick_create_task':
-            return await this.createTask(args);
-          case 'ticktick_update_task':
-            return await this.updateTask(args);
-          case 'ticktick_delete_task':
-            return await this.deleteTask(args);
-          case 'ticktick_complete_task':
-            return await this.completeTask(args);
           case 'ticktick_get_task_details':
             return await this.getTaskDetails(args);
           case 'ticktick_filter_tasks':
@@ -2852,8 +1182,6 @@ class TickTickMCPServer {
             return await this.convertDatetimeToTicktickFormat(args);
           case 'ticktick_get_tags':
             return await this.getTags(args);
-          case 'ticktick_create_tag':
-            return await this.createTag(args);
           case 'ticktick_search_tasks':
             return await this.searchTasks(args);
           case 'ticktick_get_today_tasks':
@@ -2862,172 +1190,64 @@ class TickTickMCPServer {
             return await this.getOverdueTasks(args);
           case 'ticktick_get_upcoming_tasks':
             return await this.getUpcomingTasks(args);
-          case 'ticktick_add_tag_to_task':
-            return await this.addTagToTask(args);
           case 'ticktick_get_user_profile':
             return await this.getUserProfile(args);
           case 'ticktick_get_habits':
             return await this.getHabits(args);
-          case 'ticktick_create_habit':
-            return await this.createHabit(args);
-          case 'ticktick_update_habit':
-            return await this.updateHabit(args);
-          case 'ticktick_delete_habit':
-            return await this.deleteHabit(args);
-          case 'ticktick_checkin_habit':
-            return await this.checkinHabit(args);
           case 'ticktick_get_habit_history':
             return await this.getHabitHistory(args);
           case 'ticktick_get_habit_stats':
             return await this.getHabitStats(args);
-          case 'ticktick_pause_habit':
-            return await this.pauseHabit(args);
-          case 'ticktick_resume_habit':
-            return await this.resumeHabit(args);
           case 'ticktick_get_habit_streaks':
             return await this.getHabitStreaks(args);
-          case 'ticktick_bulk_checkin_habits':
-            return await this.bulkCheckinHabits(args);
           case 'ticktick_get_habit_calendar':
             return await this.getHabitCalendar(args);
-          case 'ticktick_set_habit_goal':
-            return await this.setHabitGoal(args);
           case 'ticktick_get_habits_summary':
             return await this.getHabitsSummary(args);
           case 'ticktick_export_habit_data':
             return await this.exportHabitData(args);
-          case 'ticktick_update_tag':
-            return await this.updateTag(args);
-          case 'ticktick_delete_tag':
-            return await this.deleteTag(args);
-          case 'ticktick_remove_tag_from_task':
-            return await this.removeTagFromTask(args);
           case 'ticktick_get_tasks_by_tag':
             return await this.getTasksByTag(args);
           case 'ticktick_get_tag_usage_stats':
             return await this.getTagUsageStats(args);
-          case 'ticktick_merge_tags':
-            return await this.mergeTags(args);
-          case 'ticktick_bulk_tag_operations':
-            return await this.bulkTagOperations(args);
-          case 'ticktick_start_focus_session':
-            return await this.startFocusSession(args);
-          case 'ticktick_stop_focus_session':
-            return await this.stopFocusSession(args);
-          case 'ticktick_pause_focus_session':
-            return await this.pauseFocusSession(args);
-          case 'ticktick_resume_focus_session':
-            return await this.resumeFocusSession(args);
           case 'ticktick_get_focus_stats':
             return await this.getFocusStats(args);
-          case 'ticktick_set_task_estimate':
-            return await this.setTaskEstimate(args);
           case 'ticktick_get_daily_focus_summary':
             return await this.getDailyFocusSummary(args);
           case 'ticktick_get_focus_history':
             return await this.getFocusHistory(args);
-          case 'ticktick_set_focus_goals':
-            return await this.setFocusGoals(args);
           case 'ticktick_get_productivity_insights':
             return await this.getProductivityInsights(args);
           case 'ticktick_get_project_folders':
             return await this.getProjectFolders(args);
-          case 'ticktick_create_project_folder':
-            return await this.createProjectFolder(args);
-          case 'ticktick_move_project_to_folder':
-            return await this.moveProjectToFolder(args);
-          case 'ticktick_archive_project':
-            return await this.archiveProject(args);
-          case 'ticktick_unarchive_project':
-            return await this.unarchiveProject(args);
-          case 'ticktick_duplicate_project':
-            return await this.duplicateProject(args);
           case 'ticktick_get_project_stats':
             return await this.getProjectStats(args);
-          case 'ticktick_set_project_color':
-            return await this.setProjectColor(args);
-          case 'ticktick_reorder_projects':
-            return await this.reorderProjects(args);
           case 'ticktick_get_project_templates':
             return await this.getProjectTemplates(args);
-          case 'ticktick_create_project_from_template':
-            return await this.createProjectFromTemplate(args);
-          case 'ticktick_export_project':
-            return await this.exportProject(args);
-          case 'ticktick_share_project':
-            return await this.shareProject(args);
           case 'ticktick_get_shared_projects':
             return await this.getSharedProjects(args);
-          case 'ticktick_invite_collaborator':
-            return await this.inviteCollaborator(args);
-          case 'ticktick_remove_collaborator':
-            return await this.removeCollaborator(args);
-          case 'ticktick_assign_task':
-            return await this.assignTask(args);
           case 'ticktick_get_task_assignees':
             return await this.getTaskAssignees(args);
-          case 'ticktick_add_task_comment':
-            return await this.addTaskComment(args);
           case 'ticktick_get_team_activity':
             return await this.getTeamActivity(args);
-          case 'ticktick_set_project_permissions':
-            return await this.setProjectPermissions(args);
           case 'ticktick_get_collaboration_stats':
             return await this.getCollaborationStats(args);
-          case 'ticktick_bulk_assign_tasks':
-            return await this.bulkAssignTasks(args);
-          case 'ticktick_export_team_report':
-            return await this.exportTeamReport(args);
           case 'ticktick_get_calendar_events':
             return await this.getCalendarEvents(args);
-          case 'ticktick_create_calendar_event':
-            return await this.createCalendarEvent(args);
-          case 'ticktick_sync_with_google_calendar':
-            return await this.syncWithGoogleCalendar(args);
-          case 'ticktick_sync_with_outlook':
-            return await this.syncWithOutlook(args);
           case 'ticktick_get_calendar_view':
             return await this.getCalendarView(args);
-          case 'ticktick_convert_task_to_event':
-            return await this.convertTaskToEvent(args);
           case 'ticktick_get_schedule_conflicts':
             return await this.getScheduleConflicts(args);
-          case 'ticktick_bulk_calendar_import':
-            return await this.bulkCalendarImport(args);
           case 'ticktick_get_task_notes':
             return await this.getTaskNotes(args);
-          case 'ticktick_add_task_note':
-            return await this.addTaskNote(args);
-          case 'ticktick_update_task_note':
-            return await this.updateTaskNote(args);
-          case 'ticktick_delete_task_note':
-            return await this.deleteTaskNote(args);
-          case 'ticktick_upload_task_attachment':
-            return await this.uploadTaskAttachment(args);
           case 'ticktick_get_task_attachments':
             return await this.getTaskAttachments(args);
           case 'ticktick_download_task_attachment':
             return await this.downloadTaskAttachment(args);
-          case 'ticktick_delete_task_attachment':
-            return await this.deleteTaskAttachment(args);
           case 'ticktick_get_task_templates':
             return await this.getTaskTemplates(args);
-          case 'ticktick_create_task_template':
-            return await this.createTaskTemplate(args);
-          case 'ticktick_update_task_template':
-            return await this.updateTaskTemplate(args);
-          case 'ticktick_delete_task_template':
-            return await this.deleteTaskTemplate(args);
-          case 'ticktick_create_task_from_template':
-            return await this.createTaskFromTemplate(args);
-          case 'ticktick_set_recurring_task':
-            return await this.setRecurringTask(args);
           case 'ticktick_get_recurring_tasks':
             return await this.getRecurringTasks(args);
-          case 'ticktick_pause_recurring_task':
-            return await this.pauseRecurringTask(args);
-          case 'ticktick_bulk_create_from_template':
-            return await this.bulkCreateFromTemplate(args);
           case 'ticktick_get_productivity_report':
             return await this.getProductivityReport(args);
           case 'ticktick_get_completion_trends':
@@ -3042,20 +1262,10 @@ class TickTickMCPServer {
             return await this.getWeeklySummary(args);
           case 'ticktick_get_monthly_insights':
             return await this.getMonthlyInsights(args);
-          case 'ticktick_update_user_settings':
-            return await this.updateUserSettings(args);
           case 'ticktick_get_notification_settings':
             return await this.getNotificationSettings(args);
-          case 'ticktick_update_notification_settings':
-            return await this.updateNotificationSettings(args);
           case 'ticktick_get_sync_settings':
             return await this.getSyncSettings(args);
-          case 'ticktick_update_sync_settings':
-            return await this.updateSyncSettings(args);
-          case 'ticktick_reset_user_data':
-            return await this.resetUserData(args);
-          case 'ticktick_import_from_csv':
-            return await this.importFromCsv(args);
           case 'ticktick_get_cached_tasks':
             return await this.getCachedTasks(args);
           case 'ticktick_register_task_id':
@@ -3071,6 +1281,11 @@ class TickTickMCPServer {
   }
 
   async makeTickTickRequest(endpoint, method = 'GET', data = null) {
+    // SAFETY: Read-only mode - reject all non-GET requests
+    if (method !== 'GET') {
+      throw new Error(`Read-only mode: ${method} requests are blocked. Only GET requests are allowed.`);
+    }
+
     const baseUrl = 'https://api.ticktick.com/open/v1';
     const url = `${baseUrl}${endpoint}`;
     
@@ -3114,7 +1329,12 @@ class TickTickMCPServer {
     const projects = await this.makeTickTickRequest('/project');
     const allTasks = [];
 
-    for (const project of projects) {
+    // Include Inbox -- the Open API doesn't list it as a project,
+    // but GET /project/inbox/data works and returns Inbox tasks.
+    const inboxProject = { id: 'inbox', name: 'Inbox' };
+    const allProjects = [inboxProject, ...projects];
+
+    for (const project of allProjects) {
       try {
         const data = await this.makeTickTickRequest(`/project/${project.id}/data`);
         if (data && data.tasks && Array.isArray(data.tasks)) {
@@ -8701,77 +6921,15 @@ class TickTickMCPServer {
     console.log(`🔑 Client ID: ${TICKTICK_CLIENT_ID ? '✅ Configured' : '❌ Missing'}`);
     console.log(`🎫 Token: ${TICKTICK_TOKEN ? '✅ Configured' : '❌ Missing'}`);
     console.log(`🔐 Access Token: ${TICKTICK_ACCESS_TOKEN ? '✅ Configured' : '❌ Missing'}`);
-    console.log('🔧 Available tools (112 total):');
-    console.log('   📋 PROJECTS & TASKS (8):');
-    console.log('   • ticktick_get_projects - List all projects');
-    console.log('   • ticktick_create_project - Create new project');
-    console.log('   • ticktick_create_task - Create new task');
-    console.log('   • ticktick_update_task - Update existing task');
-    console.log('   • ticktick_delete_task - Delete task');
-    console.log('   • ticktick_complete_task - Mark task complete');
-    console.log('   • ticktick_get_task_details - Get task details');
-    console.log('   🏷️ TAGS & ORGANIZATION (10):');
-    console.log('   • ticktick_get_tags - List all tags');
-    console.log('   • ticktick_create_tag - Create new tag');
-    console.log('   • ticktick_update_tag - Update tag');
-    console.log('   • ticktick_delete_tag - Delete tag');
-    console.log('   • ticktick_add_tag_to_task - Add tag to task');
-    console.log('   • ticktick_remove_tag_from_task - Remove tag from task');
-    console.log('   • ticktick_get_tasks_by_tag - Get tasks by tag');
-    console.log('   • ticktick_get_tag_usage_stats - Tag usage statistics');
-    console.log('   • ticktick_merge_tags - Merge tags');
-    console.log('   • ticktick_bulk_tag_operations - Bulk tag operations');
-    console.log('   🔄 HABITS & TRACKING (15):');
-    console.log('   • ticktick_get_habits - List all habits');
-    console.log('   • ticktick_create_habit - Create new habit');
-    console.log('   • ticktick_update_habit - Update habit');
-    console.log('   • ticktick_delete_habit - Delete habit');
-    console.log('   • ticktick_checkin_habit - Check in habit');
-    console.log('   • ticktick_get_habit_history - Habit completion history');
-    console.log('   • ticktick_get_habit_stats - Habit statistics');
-    console.log('   • ticktick_pause_habit - Pause habit');
-    console.log('   • ticktick_resume_habit - Resume habit');
-    console.log('   • ticktick_get_habit_streaks - Get habit streaks');
-    console.log('   • ticktick_bulk_checkin_habits - Bulk habit check-in');
-    console.log('   • ticktick_get_habit_calendar - Habit calendar view');
-    console.log('   • ticktick_set_habit_goal - Set habit goals');
-    console.log('   • ticktick_get_habits_summary - Daily habits summary');
-    console.log('   • ticktick_export_habit_data - Export habit data');
-    console.log('   ⏰ FOCUS TIME & POMODORO (10):');
-    console.log('   • ticktick_start_focus_session - Start focus session');
-    console.log('   • ticktick_stop_focus_session - Stop focus session');
-    console.log('   • ticktick_pause_focus_session - Pause focus session');
-    console.log('   • ticktick_resume_focus_session - Resume focus session');
-    console.log('   • ticktick_get_focus_stats - Focus statistics');
-    console.log('   • ticktick_set_task_estimate - Set task time estimate');
-    console.log('   • ticktick_get_daily_focus_summary - Daily focus summary');
-    console.log('   • ticktick_get_focus_history - Focus session history');
-    console.log('   • ticktick_set_focus_goals - Set focus goals');
-    console.log('   • ticktick_get_productivity_insights - AI productivity insights');
-    console.log('   🔍 SEARCH & FILTERING (5):');
-    console.log('   • ticktick_filter_tasks - Filter tasks by criteria');
-    console.log('   • ticktick_search_tasks - Advanced text search');
-    console.log('   • ticktick_get_today_tasks - Get today\'s tasks');
-    console.log('   • ticktick_get_overdue_tasks - Get overdue tasks');
-    console.log('   • ticktick_get_upcoming_tasks - Get upcoming tasks');
-    console.log('   ⚙️ UTILITIES (2):');
-    console.log('   • ticktick_convert_datetime_to_ticktick_format - Convert datetime');
-    console.log('   • ticktick_get_user_profile - Get user profile');
-    console.log('   📊 ANALYTICS & REPORTING (7):');
-    console.log('   • ticktick_get_productivity_report - Comprehensive productivity analytics');
-    console.log('   • ticktick_get_completion_trends - Task completion patterns and trends');
-    console.log('   • ticktick_get_time_tracking_report - Time allocation analysis');
-    console.log('   • ticktick_get_goal_progress - Goal achievement tracking');
-    console.log('   • ticktick_export_analytics_data - Export analytics data');
-    console.log('   • ticktick_get_weekly_summary - Weekly productivity summary');
-    console.log('   • ticktick_get_monthly_insights - Monthly performance insights');
-    console.log('   ⚙️ SETTINGS & PREFERENCES (6):');
-    console.log('   • ticktick_update_user_settings - Modify user preferences');
-    console.log('   • ticktick_get_notification_settings - Get notification preferences');
-    console.log('   • ticktick_update_notification_settings - Configure notifications');
-    console.log('   • ticktick_get_sync_settings - Get synchronization settings');
-    console.log('   • ticktick_update_sync_settings - Configure sync behavior');
-    console.log('   • ticktick_reset_user_data - Reset or manage user data');
+    console.log('🔒 READ-ONLY MODE - All write operations blocked');
+    console.log('🔧 Available read-only tools:');
+    console.log('   📋 Projects & Tasks: get_projects, get_task_details, filter_tasks, search_tasks');
+    console.log('   🏷️ Tags: get_tags, get_tasks_by_tag, get_tag_usage_stats');
+    console.log('   🔄 Habits: get_habits, get_habit_history/stats/streaks/calendar/summary, export_habit_data');
+    console.log('   🔍 Search: get_today_tasks, get_overdue_tasks, get_upcoming_tasks');
+    console.log('   📊 Analytics: productivity_report, completion_trends, time_tracking, goal_progress, weekly/monthly');
+    console.log('   ⚙️ Settings: get_notification_settings, get_sync_settings, get_user_profile');
+    console.log('   🛠️ Utilities: convert_datetime, get_cached_tasks, register_task_id');
     console.log('📡 Server ready for connections...');
   }
 }
