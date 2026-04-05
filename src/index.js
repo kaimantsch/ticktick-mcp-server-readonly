@@ -17,6 +17,20 @@ import fs from 'fs';
 import path from 'path';
 import os from 'os';
 
+// Load .env file from the server directory (no dependency required)
+import { fileURLToPath } from 'url';
+const __serverDir = path.dirname(fileURLToPath(import.meta.url));
+const __envPath = path.join(__serverDir, '..', '.env');
+try {
+  const envContents = fs.readFileSync(__envPath, 'utf8');
+  for (const line of envContents.split('\n')) {
+    const match = line.match(/^([A-Z_]+)=(.+)$/);
+    if (match && !process.env[match[1]]) {
+      process.env[match[1]] = match[2].trim();
+    }
+  }
+} catch { /* .env file is optional -- env vars can be passed directly */ }
+
 // Environment configuration
 const TICKTICK_CLIENT_ID = process.env.TICKTICK_CLIENT_ID;
 const TICKTICK_CLIENT_SECRET = process.env.TICKTICK_CLIENT_SECRET;
