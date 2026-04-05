@@ -3107,6 +3107,32 @@ class TickTickMCPServer {
     return responseData;
   }
 
+  // Fetch all tasks across all projects using /project/{projectId}/data
+  // The TickTick Open API doesn't have a bulk task listing endpoint,
+  // so we iterate over projects and collect tasks from each one.
+  async getAllTasks() {
+    const projects = await this.makeTickTickRequest('/project');
+    const allTasks = [];
+
+    for (const project of projects) {
+      try {
+        const data = await this.makeTickTickRequest(`/project/${project.id}/data`);
+        if (data && data.tasks && Array.isArray(data.tasks)) {
+          // Tag each task with the project name for display purposes
+          for (const task of data.tasks) {
+            task._projectName = project.name;
+            allTasks.push(task);
+          }
+        }
+      } catch (err) {
+        // Some projects may fail (e.g. permission issues) -- skip and continue
+        console.warn(`Skipping project "${project.name}" (${project.id}): ${err.message}`);
+      }
+    }
+
+    return allTasks;
+  }
+
   // Cache-based task management methods
   async importFromCsv({ csv_data }) {
     try {
@@ -3444,12 +3470,10 @@ class TickTickMCPServer {
 
 
   async filterTasks({ keywords, tags, priority, due_before, due_after }) {
-    // Note: This is a simplified implementation
-    // In a real implementation, you would use TickTick's search API
     try {
-      const allTasks = await this.makeTickTickRequest('/task');
-      
-      let filteredTasks = allTasks;
+      const allTasks = await this.getAllTasks();
+
+      let filteredTasks = allTasks.filter(t => t.status !== 2);
       
       if (keywords) {
         const keywordLower = keywords.toLowerCase();
@@ -3486,13 +3510,16 @@ class TickTickMCPServer {
       return {
         content: [{
           type: 'text',
-          text: `🔍 **Filtered TickTick Tasks** (${filteredTasks.length} found):\n\n` +
-                filteredTasks.map(task => 
-                  `**${task.title}** (ID: ${task.id})\n` +
-                  `- Status: ${task.status === 2 ? '✅ Completed' : '⏳ Pending'}\n` +
-                  `- Priority: ${this.getPriorityText(task.priority)}\n` +
-                  `${task.dueDate ? `- Due: ${new Date(task.dueDate).toLocaleDateString()}\n` : ''}`
-                ).join('\n')
+          text: filteredTasks.length === 0
+                ? `No tasks matched the given filters.`
+                : `**Filtered Tasks** (${filteredTasks.length} found):\n\n` +
+                  filteredTasks.map(task =>
+                    `**${task.title}** (ID: ${task.id})\n` +
+                    `- Priority: ${this.getPriorityText(task.priority)}\n` +
+                    `${task.dueDate ? `- Due: ${new Date(task.dueDate).toLocaleDateString()}\n` : ''}` +
+                    `- Project: ${task._projectName || task.projectId}\n` +
+                    `${task.tags && task.tags.length ? `- Tags: ${task.tags.join(', ')}\n` : ''}`
+                  ).join('\n')
         }]
       };
     } catch (error) {
@@ -3603,139 +3630,114 @@ class TickTickMCPServer {
 
   async getTodayTasks({ include_overdue = true }) {
     try {
-      const today = new Date();
-      const todayStr = today.toISOString().split('T')[0];
-      
-      let endpoint = `/task?dueDate=${todayStr}`;
-      if (include_overdue) {
-        const yesterday = new Date(today.getTime() - 24 * 60 * 60 * 1000);
-        const yesterdayStr = yesterday.toISOString().split('T')[0];
-        endpoint = `/task?dueBefore=${todayStr}&dueAfter=${yesterdayStr}`;
-      }
-      
-      const tasks = await this.makeTickTickRequest(endpoint);
-      
+      const allTasks = await this.getAllTasks();
+      const now = new Date();
+      const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const todayEnd = new Date(todayStart.getTime() + 24 * 60 * 60 * 1000);
+
+      const tasks = allTasks.filter(task => {
+        if (task.status === 2) return false; // skip completed
+        if (!task.dueDate) return false;
+        const due = new Date(task.dueDate);
+        if (include_overdue) {
+          return due < todayEnd;
+        }
+        return due >= todayStart && due < todayEnd;
+      });
+
       return {
         content: [{
           type: 'text',
-          text: `📅 **Today's Tasks** (${tasks.length} found):\n\n` +
-                tasks.map(task => 
-                  `**${task.title}** (ID: ${task.id})\n` +
-                  `- Status: ${task.status === 2 ? '✅ Completed' : '⏳ Pending'}\n` +
+          text: tasks.length === 0
+            ? `No tasks due today${include_overdue ? ' (including overdue)' : ''}.`
+            : `**Today's Tasks** (${tasks.length} found):\n\n` +
+              tasks.map(task => {
+                const due = new Date(task.dueDate);
+                const isOverdue = due < todayStart;
+                return `**${task.title}** (ID: ${task.id})\n` +
+                  `- Status: ${isOverdue ? 'OVERDUE' : 'Pending'}\n` +
                   `- Priority: ${this.getPriorityText(task.priority)}\n` +
-                  `${task.dueDate ? `- Due: ${new Date(task.dueDate).toLocaleTimeString()}\n` : ''}` +
-                  `${task.tags && task.tags.length ? `- Tags: ${task.tags.join(', ')}\n` : ''}`
-                ).join('\n')
+                  `- Due: ${due.toLocaleDateString()}\n` +
+                  `- Project: ${task._projectName || task.projectId}\n` +
+                  `${task.tags && task.tags.length ? `- Tags: ${task.tags.join(', ')}\n` : ''}`;
+              }).join('\n')
         }]
       };
     } catch (error) {
-      // Provide helpful alternatives when bulk APIs fail
-      const cache = this.loadCache();
-      const cachedTaskCount = Object.keys(cache.tasks).length;
-      
-      return {
-        content: [{
-          type: 'text',
-          text: `❌ **TickTick bulk listing unavailable** (500 error)\n\n` +
-                `💡 **Alternatives to get your tasks**:\n` +
-                `• **Use cache**: \`ticktick_get_cached_tasks()\` (${cachedTaskCount} tasks available)\n` +
-                `• **Import data**: \`ticktick_import_from_csv()\` with exported TickTick data\n` +
-                `• **Register tasks**: \`ticktick_register_task_id(task_id, project_id)\` for specific tasks\n` +
-                `• **Read specific task**: \`ticktick_get_task_details(project_id, task_id)\` if you know the IDs\n\n` +
-                `📋 **Why this happens**: TickTick's bulk task listing API has limitations and often returns 500 errors.\n\n` +
-                `🚀 **Quick solution**: Export your tasks from TickTick app → Import with \`ticktick_import_from_csv()\``
-        }]
-      };
+      throw new Error(`Failed to get today's tasks: ${error.message}`);
     }
   }
 
   async getOverdueTasks({ limit = 50 }) {
     try {
-      const today = new Date().toISOString().split('T')[0];
-      const endpoint = `/task?dueBefore=${today}&status=0&limit=${limit}`;
-      
-      const tasks = await this.makeTickTickRequest(endpoint);
-      
+      const allTasks = await this.getAllTasks();
+      const now = new Date();
+      const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+      const tasks = allTasks
+        .filter(task => {
+          if (task.status === 2) return false;
+          if (!task.dueDate) return false;
+          return new Date(task.dueDate) < todayStart;
+        })
+        .slice(0, limit);
+
       return {
         content: [{
           type: 'text',
-          text: `⏰ **Overdue Tasks** (${tasks.length} found):\n\n` +
-                tasks.map(task => {
-                  const dueDate = new Date(task.dueDate);
-                  const daysOverdue = Math.floor((new Date() - dueDate) / (1000 * 60 * 60 * 24));
-                  
-                  return `**${task.title}** (ID: ${task.id})\n` +
-                         `- Priority: ${this.getPriorityText(task.priority)}\n` +
-                         `- Due: ${dueDate.toLocaleDateString()} (${daysOverdue} days ago)\n` +
-                         `- Project: ${task.projectId}\n` +
+          text: tasks.length === 0
+            ? `No overdue tasks found.`
+            : `**Overdue Tasks** (${tasks.length} found):\n\n` +
+              tasks.map(task => {
+                const dueDate = new Date(task.dueDate);
+                const daysOverdue = Math.floor((now - dueDate) / (1000 * 60 * 60 * 24));
+
+                return `**${task.title}** (ID: ${task.id})\n` +
+                       `- Priority: ${this.getPriorityText(task.priority)}\n` +
+                       `- Due: ${dueDate.toLocaleDateString()} (${daysOverdue} days ago)\n` +
+                         `- Project: ${task._projectName || task.projectId}\n` +
                          `${task.tags && task.tags.length ? `- Tags: ${task.tags.join(', ')}\n` : ''}`;
                 }).join('\n')
         }]
       };
     } catch (error) {
-      // Provide helpful alternatives when bulk APIs fail
-      const cache = this.loadCache();
-      const cachedTaskCount = Object.keys(cache.tasks).length;
-      
-      return {
-        content: [{
-          type: 'text',
-          text: `❌ **TickTick bulk listing unavailable** (500 error)\n\n` +
-                `💡 **Alternatives to get your overdue tasks**:\n` +
-                `• **Use cache**: \`ticktick_get_cached_tasks()\` (${cachedTaskCount} tasks available)\n` +
-                `• **Import data**: \`ticktick_import_from_csv()\` with exported TickTick data\n` +
-                `• **Register tasks**: \`ticktick_register_task_id(task_id, project_id)\` for specific tasks\n` +
-                `• **Read specific task**: \`ticktick_get_task_details(project_id, task_id)\` if you know the IDs\n\n` +
-                `📋 **Why this happens**: TickTick's bulk task listing API has limitations and often returns 500 errors.\n\n` +
-                `🚀 **Quick solution**: Export your tasks from TickTick app → Import with \`ticktick_import_from_csv()\``
-        }]
-      };
+      throw new Error(`Failed to get overdue tasks: ${error.message}`);
     }
   }
 
   async getUpcomingTasks({ days_ahead = 7, limit = 30 }) {
     try {
-      const today = new Date();
-      const futureDate = new Date(today.getTime() + days_ahead * 24 * 60 * 60 * 1000);
-      
-      const todayStr = today.toISOString().split('T')[0];
-      const futureStr = futureDate.toISOString().split('T')[0];
-      
-      const endpoint = `/task?dueAfter=${todayStr}&dueBefore=${futureStr}&limit=${limit}`;
-      const tasks = await this.makeTickTickRequest(endpoint);
-      
+      const allTasks = await this.getAllTasks();
+      const now = new Date();
+      const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const futureEnd = new Date(todayStart.getTime() + (days_ahead + 1) * 24 * 60 * 60 * 1000);
+
+      const tasks = allTasks
+        .filter(task => {
+          if (task.status === 2) return false;
+          if (!task.dueDate) return false;
+          const due = new Date(task.dueDate);
+          return due >= todayStart && due < futureEnd;
+        })
+        .slice(0, limit);
+
       return {
         content: [{
           type: 'text',
-          text: `📆 **Upcoming Tasks** (Next ${days_ahead} days, ${tasks.length} found):\n\n` +
-                tasks.map(task => 
-                  `**${task.title}** (ID: ${task.id})\n` +
-                  `- Status: ${task.status === 2 ? '✅ Completed' : '⏳ Pending'}\n` +
-                  `- Priority: ${this.getPriorityText(task.priority)}\n` +
-                  `- Due: ${new Date(task.dueDate).toLocaleDateString()}\n` +
-                  `- Project: ${task.projectId}\n` +
-                  `${task.tags && task.tags.length ? `- Tags: ${task.tags.join(', ')}\n` : ''}`
-                ).join('\n')
+          text: tasks.length === 0
+            ? `No upcoming tasks in the next ${days_ahead} days.`
+            : `**Upcoming Tasks** (Next ${days_ahead} days, ${tasks.length} found):\n\n` +
+              tasks.map(task =>
+                `**${task.title}** (ID: ${task.id})\n` +
+                `- Priority: ${this.getPriorityText(task.priority)}\n` +
+                `- Due: ${new Date(task.dueDate).toLocaleDateString()}\n` +
+                `- Project: ${task._projectName || task.projectId}\n` +
+                `${task.tags && task.tags.length ? `- Tags: ${task.tags.join(', ')}\n` : ''}`
+              ).join('\n')
         }]
       };
     } catch (error) {
-      // Provide helpful alternatives when bulk APIs fail
-      const cache = this.loadCache();
-      const cachedTaskCount = Object.keys(cache.tasks).length;
-      
-      return {
-        content: [{
-          type: 'text',
-          text: `❌ **TickTick bulk listing unavailable** (500 error)\n\n` +
-                `💡 **Alternatives to get your upcoming tasks**:\n` +
-                `• **Use cache**: \`ticktick_get_cached_tasks()\` (${cachedTaskCount} tasks available)\n` +
-                `• **Import data**: \`ticktick_import_from_csv()\` with exported TickTick data\n` +
-                `• **Register tasks**: \`ticktick_register_task_id(task_id, project_id)\` for specific tasks\n` +
-                `• **Read specific task**: \`ticktick_get_task_details(project_id, task_id)\` if you know the IDs\n\n` +
-                `📋 **Why this happens**: TickTick's bulk task listing API has limitations and often returns 500 errors.\n\n` +
-                `🚀 **Quick solution**: Export your tasks from TickTick app → Import with \`ticktick_import_from_csv()\``
-        }]
-      };
+      throw new Error(`Failed to get upcoming tasks: ${error.message}`);
     }
   }
 
